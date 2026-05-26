@@ -1,0 +1,26 @@
+kafka:
+  bootstrap_servers: "localhost:9092"
+  topics:
+    transactions: "fin.transactions.raw"
+    accounts: "fin.accounts.raw"
+  consumer_group: "financial-pipeline-cg"
+  auto_offset_reset: "earliest"
+
+aws:
+  region: "us-east-1"
+  s3_bucket: "your-data-lake-bucket"
+  s3_prefix: "financial/raw"
+  redshift_cluster: "your-redshift-cluster"
+  redshift_db: "analytics"
+  redshift_schema: "financial"
+
+airflow:
+  dag_schedule: "*/30 * * * *"
+  max_active_runs: 1
+  retries: 2
+  retry_delay_minutes: 5
+
+dbt:
+  project_dir: "./dbt_models"
+  profiles_dir: "~/.dbt"
+  target: "prod"
