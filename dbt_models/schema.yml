@@ -1,0 +1,39 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: transactions
+        description: Raw financial transactions landed from Kafka via S3 COPY
+      - name: accounts
+        description: Raw account dimension data
+
+models:
+  - name: stg_transactions
+    description: Cleaned and cast transactions from the raw layer
+    columns:
+      - name: transaction_id
+        description: Unique transaction identifier
+        tests:
+          - unique
+          - not_null
+      - name: account_id
+        tests:
+          - not_null
+      - name: amount
+        tests:
+          - not_null
+
+  - name: stg_accounts
+    description: Deduped and cleaned account records
+
+  - name: fct_daily_transactions
+    description: Daily aggregated transaction fact table for analytics
+    columns:
+      - name: transaction_date
+        tests:
+          - not_null
+      - name: total_amount
+        tests:
+          - not_null
